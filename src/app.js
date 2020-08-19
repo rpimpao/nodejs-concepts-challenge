@@ -8,6 +8,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+function validateRepoId(request, response, next) {
+  const { id } = request.params;
+
+  if (!uuidValidate(id)) {
+    return response.status(400).json({ error: "Invalid repository ID. " });
+  }
+
+  console.log("validating url for ", request.method, request.url);
+
+  return next();
+}
+
+app.use('/repositories/:id', validateRepoId);
+
 const repositories = [];
 const likes = {};
 
